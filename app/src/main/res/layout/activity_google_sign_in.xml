@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.cleeg.lighthouse.MainActivity">
+    android:orientation="vertical"
+    tools:context="com.example.cleeg.lighthouse.GoogleSignInActivity">
 
-    <TextView
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Signed In!" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
