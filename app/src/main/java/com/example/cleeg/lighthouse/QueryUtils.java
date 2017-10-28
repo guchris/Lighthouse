@@ -20,8 +20,14 @@ import java.nio.charset.Charset;
 
 public class QueryUtils {
 
-    private static final String LOG_TAG = "QueryUtils";
+    // Tag for the log messages
+    private static final String TAG = "QueryUtils";
 
+    /**
+     * Create a private constructor because no one should ever create a {@link QueryUtils} object.
+     * This class is only meant to hold static variables and methods, which can be accessed
+     * directly from the class name QueryUtils (and an object instance of QueryUtils is not needed).
+     */
     private QueryUtils() {}
 
     public static Patient fetchPatientData(String requestUrl) {
@@ -33,7 +39,7 @@ public class QueryUtils {
         try {
             jsonResponse = makeHttpRequest(url);
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem making the HTTP request.", e);
+            Log.e(TAG, "Problem making the HTTP request.", e);
         }
 
         // Extract relevant fields from the JSON response and create a Patient object
@@ -47,7 +53,7 @@ public class QueryUtils {
         try {
             url = new URL(stringUrl);
         } catch (MalformedURLException e) {
-            Log.e(LOG_TAG, "Problem building the URL ", e);
+            Log.e(TAG, "Problem building the URL ", e);
         }
         return url;
     }
@@ -91,10 +97,10 @@ public class QueryUtils {
                 // Return a String that contains the whole JSON response
                 jsonResponse = readFromStream(inputStream);
             } else {
-                Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
+                Log.e(TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
+            Log.e(TAG, "Problem retrieving the earthquake JSON results.", e);
         } finally {
             if (urlConnection != null) {
                 // Indicate that other requests to the server are unlikely in the near future
@@ -144,6 +150,9 @@ public class QueryUtils {
 
         Patient patient = new Patient();
 
+        // Try to parse the JSON response string. If there's a problem with the way the JSON
+        // is formatted, a JSONException exception object will be thrown.
+        // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
             JSONObject baseJsonResponse = new JSONObject(jsonResponse);
             JSONArray patientArray = baseJsonResponse.getJSONArray("responses");
@@ -151,17 +160,22 @@ public class QueryUtils {
             JSONObject answersObject = patientObject.getJSONObject("answers");
 
             String name = answersObject.getString("textfield_65103582");
+            Log.d(TAG, name);
             String email = answersObject.getString("email_65103637");
+            Log.d(TAG, email);
             Integer phoneNumber = answersObject.getInt("number_65103649");
             String birthDate = answersObject.getString("date_65103641");
+            Log.d(TAG, birthDate);
             Integer age = answersObject.getInt("textfield_65103645");
             String maritalStatus = answersObject.getString("list_65104043_choice");
+            Log.d(TAG, maritalStatus);
             Integer numChildren = answersObject.getInt("textfield_65104113");
             String medicinalAllergies = answersObject.getString("textfield_65103815");
+            Log.d(TAG, medicinalAllergies);
             String medications = answersObject.getString("textfield_65103842");
             String healthInsurance = answersObject.getString("list_65104104_choice");
-            String medicalHistory = answersObject.getString("list_65104224_choice_81350202");
-            String familyHistory = answersObject.getString("list_65104362_choice_81350408");
+            String medicalHistory = answersObject.getString("textarea_65113779");
+            String familyHistory = answersObject.getString("textarea_65113821");
             Integer immunizationUpToDate = answersObject.getInt("yesno_65104422");
             String emergencyContactName = answersObject.getString("textfield_65104494");
             Integer emergencyContactPhone = answersObject.getInt("number_65104504");
@@ -172,6 +186,8 @@ public class QueryUtils {
         } catch (JSONException e) {
             Log.e("QueryUtils", "Problem parsing the patient JSON results", e);
         }
+
+        // Return the patient
         return patient;
     }
 }
