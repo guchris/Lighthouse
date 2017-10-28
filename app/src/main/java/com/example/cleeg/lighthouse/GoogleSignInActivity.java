@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.cleeg.lighthouse.R;
+import com.example.cleeg.lighthouse.models.Patient;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -29,7 +30,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class GoogleSignInActivity extends BaseActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -147,7 +150,7 @@ public class GoogleSignInActivity extends BaseActivity implements
             mDatabaseReference.child("patients").child(username)
                     .child("room number").setValue(0);
 
-            startActivity(new Intent(GoogleSignInActivity.this, MainActivity.class));
+            startActivity(new Intent(GoogleSignInActivity.this, SignUpActivity.class));
         }
     }
 
