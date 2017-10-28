@@ -132,25 +132,23 @@ public class GoogleSignInActivity extends BaseActivity implements
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
-            if (newUser(user)) {
-                String email = user.getEmail();
-                String username;
-                if (email.contains("@")){
-                    username = email.split("@")[0];
-                } else {
-                    username = email;
-                }
-
-                mDatabaseReference.child("patients").child(username)
-                        .child("uid").setValue(user.getUid());
+            String email = user.getEmail();
+            String username;
+            if (email.contains("@")){
+                username = email.split("@")[0];
+            } else {
+                username = email;
             }
+
+            mDatabaseReference.child("patients").child(username)
+                    .child("uid").setValue(user.getUid());
+            mDatabaseReference.child("patients").child(username)
+                    .child("appointment").setValue("false");
+            mDatabaseReference.child("patients").child(username)
+                    .child("room number").setValue(0);
+
             startActivity(new Intent(GoogleSignInActivity.this, MainActivity.class));
         }
-    }
-
-    private boolean newUser(FirebaseUser user) {
-        // Checks if email of signed in user has been used before
-        return true;
     }
 
     @Override
