@@ -1,20 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@drawable/appointmentNewBackground"
     tools:context="com.example.cleeg.lighthouse.MainActivity">
 
     <TextView
+        android:id="@+id/welcome_part1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome to your portal!" />
+        android:layout_margin="10dp"
+        android:textSize="30dp"
+        tools:text="Welcome, Christopher Gu!" />
 
-    <Button
-        android:id="@+id/make_appointment"
+    <TextView
+        android:id="@+id/welcome_part2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Make Appointment" />
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/welcome_part1"
+        android:textSize="20dp"
+        android:text="Please click the calendar below to begin making your appointment!" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/welcome_part3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_below="@+id/welcome_part2"
+        android:textSize="20dp"
+        android:text="Any push notifications from this app mean that you have been checked-in to your appointment already!" />
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/appointmentNewCalendar"
+        android:layout_marginStart="54dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="126dp" />
+
+</RelativeLayout>

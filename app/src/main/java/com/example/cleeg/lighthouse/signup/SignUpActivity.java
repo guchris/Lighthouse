@@ -28,6 +28,8 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
     // Constant value for the patient loader ID
     private static final int PATIENT_LOADER_ID = 1;
 
+    private static int INTENT_ID = 5;
+
     private DatabaseReference mDatabaseReference;
     private WebView mWebView;
 
@@ -41,6 +43,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
         Uri uri = Uri.parse("https://christophergu.typeform.com/to/FqsykY");
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
+        // startActivityForResult(intent, INTENT_ID);
 
         // Get a reference to the ConnectivityManager to check state of network connectivity
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
