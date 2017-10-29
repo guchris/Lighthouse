@@ -25,7 +25,6 @@ public class BeaconNotificationsManager {
     private EstimoteMonitoring estimoteMonitoring;
 
     private String enterMessages;
-    private String exitMessages;
     private String deviceId;
 
     private Context context;
@@ -39,10 +38,12 @@ public class BeaconNotificationsManager {
         estimoteMonitoring.setEstimoteMonitoringListener(new EstimoteMonitoringListener() {
             @Override
             public void onEnteredRegion() {
+                Boolean notExecuted = true;
                 Log.d(TAG, "onEnteredRegion");
                 String message = enterMessages;
-                if (message != null) {
+                if ((message != null) && notExecuted) {
                     showNotification(message);
+                    notExecuted = false;
                 }
             }
 
