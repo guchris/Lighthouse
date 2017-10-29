@@ -89,7 +89,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
             }
             Log.d(TAG, username);
 
-            mDatabaseReference.child("patients").child(username).setValue(patient);
+            mDatabaseReference.child("patients").child(username).child("info").setValue(patient);
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }

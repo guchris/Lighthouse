@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.cleeg.lighthouse.BaseActivity;
+import com.example.cleeg.lighthouse.MainActivity;
 import com.example.cleeg.lighthouse.R;
+import com.example.cleeg.lighthouse.models.Patient;
 import com.example.cleeg.lighthouse.signup.SignUpActivity;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -23,8 +25,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Objects;
 
 public class GoogleSignInActivity extends BaseActivity implements
         GoogleApiClient.OnConnectionFailedListener,
@@ -33,9 +40,12 @@ public class GoogleSignInActivity extends BaseActivity implements
     private static final String TAG = "GoogleSignInActivity";
     private static final int RC_SIGN_IN = 9001;
 
-    private GoogleApiClient mGoogleApiClient;
+    public GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mDatabaseReference;
+
+    private Integer patientsBefore;
+    private Integer patientsAfter;
 
     public GoogleSignInActivity() {}
 
@@ -45,8 +55,26 @@ public class GoogleSignInActivity extends BaseActivity implements
         setContentView(R.layout.activity_google_sign_in);
 
         // Initialize Firebase components
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference().child("patients");
         mFirebaseAuth = FirebaseAuth.getInstance();
+
+        // Find number of patients before possible "new" user
+        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                patientsBefore = 0;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Patient patient = snapshot.getValue(Patient.class);
+                    patientsBefore++;
+                }
+                Log.d(TAG, "Patients Before: " + patientsBefore);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        });
 
         // Button listener
         findViewById(R.id.sign_in_button).setOnClickListener(this);
@@ -61,7 +89,7 @@ public class GoogleSignInActivity extends BaseActivity implements
         // Build a GoogleApiClient with access to the Google Sign-In API and the
         // options specified by gso.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .enableAutoManage(this /* FragmentActivity */,0,  this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
     }
@@ -72,6 +100,11 @@ public class GoogleSignInActivity extends BaseActivity implements
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mFirebaseAuth.getCurrentUser();
         updateUI(currentUser);
+    }
+
+    private void signIn() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     @Override
@@ -119,14 +152,10 @@ public class GoogleSignInActivity extends BaseActivity implements
                 });
     }
 
-    private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
+
             String email = user.getEmail();
             String username;
             if (email.contains("@")){
@@ -135,14 +164,38 @@ public class GoogleSignInActivity extends BaseActivity implements
                 username = email;
             }
 
-            mDatabaseReference.child("patients").child(username)
-                    .child("uid").setValue(user.getUid());
-            mDatabaseReference.child("patients").child(username)
-                    .child("appointment").setValue("false");
-            mDatabaseReference.child("patients").child(username)
-                    .child("room number").setValue(0);
+            Patient patient = new Patient(username, false, 0, user.getUid());
+            mDatabaseReference.child(username).child("tracking").setValue(patient);
 
-            startActivity(new Intent(GoogleSignInActivity.this, SignUpActivity.class));
+            // Find number of patients after possible "new" user
+            mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    patientsAfter = 0;
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Patient patient = snapshot.getValue(Patient.class);
+                        patientsAfter++;
+                    }
+                    Log.d(TAG, "Patients After: " + patientsAfter);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                }
+            });
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (Objects.equals(patientsBefore, patientsAfter)) {
+                startActivity(new Intent(GoogleSignInActivity.this, MainActivity.class));
+            } else {
+                startActivity(new Intent(GoogleSignInActivity.this, SignUpActivity.class));
+            }
         }
     }
 

@@ -18,21 +18,24 @@ public class Patient {
     private String healthInsurance;
     private String medicalHistory;
     private String familyHistory;
-    private int immunizationUpToDate;
+    private boolean immunizationUpToDate;
     private String emergencyContactName;
     private Integer emergencyContactPhone;
 
     public Patient() {}
+
+    public Patient(String username, boolean appointment, Integer roomNumber, String uid) {
+        this.username = username;
+        this.appointment = appointment;
+        this.roomNumber = roomNumber;
+        this.uid = uid;
+    }
 
     public Patient(String name, String email, Integer phoneNumber, String birthDate,
                    Integer age, String maritalStatus, Integer numChildren, String medicinalAllergies,
                    String medications, String healthInsurance, String medicalHistory,
                    String familyHistory, int immunizationUpToDate, String emergencyContactName,
                    Integer emergencyContactPhone) {
-//        this.username = username;
-//        this.appointment = appointment;
-//        this.roomNumber = roomNumber;
-//        this.uid = uid;
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
@@ -45,15 +48,19 @@ public class Patient {
         this.healthInsurance = healthInsurance;
         this.medicalHistory = medicalHistory;
         this.familyHistory = familyHistory;
-        this.immunizationUpToDate = immunizationUpToDate;
+        if (immunizationUpToDate == 1) {
+            this.immunizationUpToDate = true;
+        } else {
+            this.immunizationUpToDate = false;
+        }
         this.emergencyContactName = emergencyContactName;
         this.emergencyContactPhone = emergencyContactPhone;
     }
 
-//    public String getUsername() { return this.username; }
-//    public boolean getAppointment() { return this.appointment; }
-//    public Integer getRoomNumber() { return this.roomNumber; }
-//    public String getUid() { return this.uid; }
+    public String getUsername() { return this.username; }
+    public boolean getAppointment() { return this.appointment; }
+    public Integer getRoomNumber() { return this.roomNumber; }
+    public String getUid() { return this.uid; }
     public String getName() { return this.name; }
     public String getEmail() { return this.email; }
     public Integer getPhoneNumber() { return this.phoneNumber; }
@@ -66,7 +73,7 @@ public class Patient {
     public String getHealthInsurance() { return this.healthInsurance; }
     public String getMedicalHistory() { return this.medicalHistory; }
     public String getFamilyHistory() { return this.familyHistory; }
-    public Integer getImmunizationUpToDate() { return this.immunizationUpToDate; }
+    public Boolean getImmunizationUpToDate() { return this.immunizationUpToDate; }
     public String getEmergencyContactName() { return this.emergencyContactName; }
     public Integer getEmergencyContactPhone() { return this.emergencyContactPhone; }
 }
