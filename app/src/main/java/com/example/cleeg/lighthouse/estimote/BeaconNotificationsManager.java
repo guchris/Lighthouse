@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -48,10 +49,6 @@ public class BeaconNotificationsManager {
             @Override
             public void onExitedRegion() {
                 Log.d(TAG, "onExitedRegion");
-                String message = exitMessages;
-                if (message != null) {
-                    showNotification(message);
-                }
             }
         });
 
@@ -67,10 +64,9 @@ public class BeaconNotificationsManager {
         });
     }
 
-    public void addNotification(String deviceId, String enterMessage, String exitMessage) {
+    public void addNotification(String deviceId, String enterMessage) {
         this.deviceId = deviceId;
         enterMessages = enterMessage;
-        exitMessages = exitMessage;
     }
 
     public void startMonitoring() {
@@ -89,8 +85,9 @@ public class BeaconNotificationsManager {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setContentTitle("Beacon Notifications")
+                .setContentTitle("Lighthouse Notifications")
                 .setContentText(message)
+                .setColor(Color.argb(255, 132, 251, 143))
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(resultPendingIntent);

@@ -1,4 +1,4 @@
-package com.example.cleeg.lighthouse;
+package com.example.cleeg.lighthouse.signup;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebView;
 
+import com.example.cleeg.lighthouse.MainActivity;
+import com.example.cleeg.lighthouse.R;
 import com.example.cleeg.lighthouse.models.Patient;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -87,7 +89,7 @@ public class SignUpActivity extends AppCompatActivity implements LoaderManager.L
             }
             Log.d(TAG, username);
 
-            mDatabaseReference.child("patients").child(username).push().setValue(patient);
+            mDatabaseReference.child("patients").child(username).setValue(patient);
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }

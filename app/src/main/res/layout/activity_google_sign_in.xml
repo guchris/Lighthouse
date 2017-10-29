@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.cleeg.lighthouse.GoogleSignInActivity">
+    tools:context="com.example.cleeg.lighthouse.authentication.GoogleSignInActivity">
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/sign_in_button"

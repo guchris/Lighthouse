@@ -1,4 +1,4 @@
-package com.example.cleeg.lighthouse;
+package com.example.cleeg.lighthouse.signup;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;

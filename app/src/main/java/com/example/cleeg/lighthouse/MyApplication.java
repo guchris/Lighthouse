@@ -23,8 +23,7 @@ public class MyApplication extends Application {
         BeaconNotificationsManager beaconNotificationsManager = new BeaconNotificationsManager(this);
         beaconNotificationsManager.addNotification(
                 "af36cf7586194e78068aaf00a747d322",
-                "Hello, world.",
-                "Goodbye, world.");
+                "You're Checked In");
         beaconNotificationsManager.startMonitoring();
 
         beaconNotificationsEnabled = true;
